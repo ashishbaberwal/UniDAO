@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract DeadmansSwitch {
+    address public owner;
+    uint256 public expiration;
+
+    constructor(uint256 _duration) {
+        owner = msg.sender;
+        expiration = block.timestamp + _duration;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can call this function.");
+        _;
+    }
+
+    modifier notExpired() {
+        require(block.timestamp <= expiration, "The switch has expired.");
+        _;
+    }
+
+    function resetSwitch(uint256 _newDuration) external onlyOwner notExpired {
+        expiration = block.timestamp + _newDuration;
+    }
+
+    // Implement your action here
+    function performAction() external onlyOwner notExpired {
+        // Replace this with your action logic
+        // For example, you could transfer funds or perform some operation.
+    }
+}
